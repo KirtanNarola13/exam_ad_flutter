@@ -1,5 +1,6 @@
 import 'package:exam_ad_flutter/screen/cart/view/cart_screen.dart';
 import 'package:exam_ad_flutter/screen/home/view/home_screen.dart';
+import 'package:exam_ad_flutter/screen/splash/view/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,11 +18,15 @@ void main() async {
       getPages: [
         GetPage(
           name: '/',
-          page: () => HomeScreen(),
+          page: () => const SplashScreen(),
+        ),
+        GetPage(
+          name: '/home',
+          page: () => const HomeScreen(),
         ),
         GetPage(
           name: '/cart',
-          page: () => CartScreen(),
+          page: () => const CartScreen(),
         )
       ],
     ),

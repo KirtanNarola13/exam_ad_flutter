@@ -57,12 +57,12 @@ class DBHelper {
     return data.map((e) => CartModel.fromDB(data: e)).toList();
   }
 
-  Future<int> deleteProduct({required int id}) async {
+  Future<int> deleteProduct({required String title}) async {
     await initDB();
     return await db!.delete(
       tableName,
-      where: "$productId = ?",
-      whereArgs: [id],
+      where: "$productName = ?",
+      whereArgs: [title],
     );
   }
 }

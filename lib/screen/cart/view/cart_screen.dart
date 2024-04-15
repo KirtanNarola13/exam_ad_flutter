@@ -1,5 +1,7 @@
+import 'package:exam_ad_flutter/screen/cart/controller/remove_controller.dart';
 import 'package:exam_ad_flutter/utils/db_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../model/cart_model.dart';
 
@@ -8,13 +10,14 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    RemoveController controller = Get.put(RemoveController());
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cart'),
+        title: const Text('Cart'),
         centerTitle: true,
       ),
       body: FutureBuilder(
-        future: DBHelper.dbHelper.getMyTasks(),
+        future: controller.getMyProduct(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(
@@ -22,19 +25,33 @@ class CartScreen extends StatelessWidget {
             );
           } else if (snapshot.hasData) {
             List<CartModel>? data = snapshot.data;
-            return ListView.builder(
-                itemCount: data!.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
+            return GetBuilder<RemoveController>(
+              builder: (controller) => ListView.builder(
+                  itemCount: data!.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
                         child: ListTile(
-                      title: Text(data[index].name),
-                    )),
-                  );
-                });
+                          title: Text(data[index].name),
+                          subtitle: Text(data[index].price),
+                          trailing: IconButton(
+                            onPressed: () {
+                              DBHelper.dbHelper
+                                  .deleteProduct(title: data[index].name);
+                            },
+                            icon: const Icon(
+                              Icons.remove_circle_outline_outlined,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+            );
           }
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         },
