@@ -13,5 +13,6 @@ class RemoveController extends GetxController {
         .deleteProduct(title: name)
         .then((value) => getMyProduct());
     update();
+    return null;
   }
 }

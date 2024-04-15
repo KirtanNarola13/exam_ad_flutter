@@ -16,17 +16,17 @@ class CartScreen extends StatelessWidget {
         title: const Text('Cart'),
         centerTitle: true,
       ),
-      body: FutureBuilder(
-        future: controller.getMyProduct(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          } else if (snapshot.hasData) {
-            List<CartModel>? data = snapshot.data;
-            return GetBuilder<RemoveController>(
-              builder: (controller) => ListView.builder(
+      body: GetBuilder<RemoveController>(
+        builder: (controller) => FutureBuilder(
+          future: controller.getMyProduct(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(snapshot.error.toString()),
+              );
+            } else if (snapshot.hasData) {
+              List<CartModel>? data = snapshot.data;
+              return ListView.builder(
                   itemCount: data!.length,
                   itemBuilder: (context, index) {
                     return Padding(
@@ -37,8 +37,7 @@ class CartScreen extends StatelessWidget {
                           subtitle: Text(data[index].price),
                           trailing: IconButton(
                             onPressed: () {
-                              DBHelper.dbHelper
-                                  .deleteProduct(title: data[index].name);
+                              controller.removeProduct(data[index].name);
                             },
                             icon: const Icon(
                               Icons.remove_circle_outline_outlined,
@@ -48,13 +47,13 @@ class CartScreen extends StatelessWidget {
                         ),
                       ),
                     );
-                  }),
+                  });
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+          },
+        ),
       ),
     );
   }
